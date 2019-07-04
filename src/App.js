@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import { CognitoUserPool, CognitoUserAttribute, CognitoUser } from 'amazon-cognito-identity-js';
 
 class App extends React.Component {
   state = {
@@ -20,6 +21,22 @@ class App extends React.Component {
 
   signUp = () => {
     console.log("Signing up")
+    var poolData = {
+        UserPoolId : 'us-east-2_POvycrMmM', // Your user pool id here
+        ClientId : '23tcni1j6dbefiibk3ra69f0d2' // Your client id here
+    };
+    var userPool = new CognitoUserPool(poolData);
+
+    var attributeList = [];
+
+    userPool.signUp(this.state.username, this.state.password, attributeList, null, function(err, result){
+        if (err) {
+            alert(err.message || JSON.stringify(err));
+            return;
+        }
+        var cognitoUser = result.user;
+        console.log('user name is ' + cognitoUser.getUsername());
+    });
   }
 
   render() {
